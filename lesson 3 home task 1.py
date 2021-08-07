@@ -32,6 +32,79 @@ def get_vacancies():
             money = money.getText()
             if " – " in money:
                 money = money.split(" – ")
+                vacancy_data['salary_min'] = int(money[0].replace('\u202f',''))
+                salary_max = money[1].replace('\u202f','')
+                vacancy_data['salary_max'] = int(salary_max.split(' ')[0])
+                vacancy_data['salary_currency'] = salary_max.split(' ')[1]
+            elif " – " not in money:
+                salary = money.split(' ')
+                if salary[0] == "от":
+                    vacancy_data['salary_min'] = int(salary[1].replace('\u202f',''))
+                    vacancy_data['salary_max'] = None
+                    vacancy_data['salary_currency'] = salary[2]
+                elif salary[0] == "до":
+                    vacancy_data['salary_min'] = None
+                    vacancy_data['salary_max'] = int(salary[1].replace('\u202f',''))
+                    vacancy_data['salary_currency'] = salary[2]
+                else:
+                    vacancy_data['salary_min'] = None
+                    try:
+                        vacancy_data['salary_max'] = int(salary[0].replace('\u202f',''))
+                        vacancy_data['salary_currency'] = salary[1]
+                    except ValueError:
+                        vacancy_data['salary_max'] = None
+                        vacancy_data['salary_currency'] = None
+        company = vacancy.find('a', attrs={'class': 'bloko-link bloko-link_secondary'})
+        if company:
+            vacancy_data['company'] = company.getText().replace('\xa0', '')
+        vacancy_data['link'] = vacancy.find('a', attrs={'data-qa': 'vacancy-serp__vacancy-title'}).get('href').split('?')[0]
+        region = vacancy.find('span', attrs={'class': 'vacancy-serp-item__meta-info'})
+        if region:
+            vacancy_data['region'] = region.getText()
+        page_vacancies.append(vacancy_data)
+    return available_vacancies.extend(page_vacancies)
+
+#while True:
+while params['page'] < 2:
+    response = None
+    if params['page'] == 0:
+        response = requests.get(url + '/search/vacancy', params={'text': params['text']}, headers=headers)
+    elif params['page'] > 0:
+        response = requests.get(url + '/search/vacancy', params=params, headers=headers)
+    soup = bs(response.text, 'html.parser')
+    vacancies_block = soup.find_all('div', attrs={'class': 'vacancy-serp-item'})
+    get_vacancies()
+    #get_vacancies(vacancies_block)
+    if soup.find('span', attrs={'class': 'bloko-form-spacer'}):
+        params['page'] +=1
+        continue
+    else:
+        break
+
+for vacancy in available_vacancies:
+    vacancies_db.update_one(
+                #{'name':vacancy['name'], 'company':vacancy['company']},
+                {'link':vacancy['link']},
+                {'$set':vacancy},
+                upsert=True)
+
+min_max = vacancies_db.find(
+    {'$or': [
+        {'salary_min': {'$gt': salary_find}},
+        {'salary_max': {'$gt': salary_find}},
+    ]})
+
+
+'''def get_vacancies():
+    page_vacancies = []
+    for vacancy in vacancies_block:
+        vacancy_data = {}
+        vacancy_data['name'] = vacancy.find('a', attrs={'class': 'bloko-link'}).getText()
+        money = vacancy.find('div', attrs={'class': 'vacancy-serp-item__sidebar'})
+        if money:
+            money = money.getText()
+            if " – " in money:
+                money = money.split(" – ")
                 vacancy_data['salary_min'] = int("".join(money[0].split("\u202f")))
                 salary_max = money[1].split('\u202f')
                 vacancy_data['salary_max'] = int(f"{salary_max[0]}{salary_max[1].split(' ')[0]}")
@@ -61,32 +134,4 @@ def get_vacancies():
             vacancy_data['region'] = region.getText()
         page_vacancies.append(vacancy_data)
     return available_vacancies.extend(page_vacancies)
-
-while True:
-    response = None
-    if params['page'] == 0:
-        response = requests.get(url + '/search/vacancy', params={'text': params['text']}, headers=headers)
-    elif params['page'] > 0:
-        response = requests.get(url + '/search/vacancy', params=params, headers=headers)
-    soup = bs(response.text, 'html.parser')
-    vacancies_block = soup.find_all('div', attrs={'class': 'vacancy-serp-item'})
-    get_vacancies()
-    #get_vacancies(vacancies_block)
-    if soup.find('span', attrs={'class': 'bloko-form-spacer'}):
-        params['page'] +=1
-        continue
-    else:
-        break
-
-for vacancy in available_vacancies:
-    vacancies_db.update_one(
-                #{'name':vacancy['name'], 'company':vacancy['company']},
-                {'link':vacancy['link']},
-                {'$set':vacancy},
-                upsert=True)
-
-min_max = vacancies_db.find(
-    {'$or': [
-        {'salary_min': {'$gt': salary_find}},
-        {'salary_max': {'$gt': salary_find}},
-    ]})
+'''
