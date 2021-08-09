@@ -26,7 +26,7 @@ driver.get(url)
 
 time.sleep(1)
 
-driver.find_element_by_class_name('geolocation__action-approve-city').click()
+#driver.find_element_by_class_name('geolocation__action-approve-city').click()
 
 #todo: найти блок в котором лежат товары. через xpath текст
 #наверное можно сделать проще, новинки лежат в списке у которого есть атрибут: ul data-init-param= {} "title":"Новинки", но я не нашел пока как зацепиться за элемент словаря атрибута.
