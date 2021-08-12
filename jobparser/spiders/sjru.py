@@ -1,6 +1,5 @@
 import scrapy
 import re
-import operator
 from scrapy.http import HtmlResponse
 from jobparser.items import JobparserItem
 
@@ -36,25 +35,28 @@ class SjruSpider(scrapy.Spider):
             elif "\xa0—\xa0" not in money:
                 money = money.split('\xa0')
                 if "от" in money:
-                    job_salary_min = int(''.join(filter(operator.isNumberType(money))))
+                    value = [i for i in money if i.isdigit()]
+                    job_salary_min = int(''.join(value))
                     job_salary_max = None
                     if money[-1].isdigit() == False:
-                        job_salary_rate = money[-1]
+                        job_salary_rate = money[-1].replace('/', ' ')
                     else:
                         job_salary_rate = None
                 elif "до" in money:
+                    value = [i for i in money if i.isdigit()]
                     job_salary_min = None
-                    job_salary_max = int(''.join(filter(operator.isNumberType(money))))
+                    job_salary_max = int(''.join(value))
                     if money[-1].isdigit() == False:
-                        job_salary_rate = money[-1]
+                        job_salary_rate = money[-1].replace('/', ' ')
                     else:
                         job_salary_rate = None
                 else:
                     job_salary_min = None
                     try:
-                        job_salary_max = int(''.join(filter(operator.isNumberType(money))))
+                        value = [i for i in money if i.isdigit()]
+                        job_salary_max = int(''.join(value))
                         if money[-1].isdigit() == False:
-                            job_salary_rate = money[-1]
+                            job_salary_rate = money[-1].replace('/', ' ')
                         else:
                             job_salary_rate = None
                     except ValueError:
@@ -64,5 +66,5 @@ class SjruSpider(scrapy.Spider):
         # job_salary_max = response.css("p.vacancy-salary span::text").extract_first()
         # job_salary_rate = '''salary_rate = job_salary_rate'''
         job_url = response.url
-        yield JobparserItem(name=job_name, alary_min=job_salary_min, salary_max=job_salary_max, url=job_url,
+        yield JobparserItem(name=job_name, salary_min=job_salary_min, salary_max=job_salary_max, url=job_url,
                             salary_rate=job_salary_rate, source=self.allowed_domains)
