@@ -42,8 +42,8 @@ driver.execute_script("window.scrollTo(0, 1500)")
 #todo: найти блок в котором лежат товары. через xpath текст
 #наверное можно сделать проще, новинки лежат в списке у которого есть атрибут: ul data-init-param= {} "title":"Новинки", но я не нашел пока как зацепиться за элемент словаря атрибута.
 #anchor_element = driver.find_element_by_xpath('//ul[contains(., "title"]') - неудачно
-new_products_block = driver.find_element_by_xpath("//h2[contains(text(), 'Новинки')]/ancestor::div[3]")
-#new_products_block = driver.find_element_by_xpath("//h2[contains(text(), 'Новинки')]")
+#new_products_block = driver.find_element_by_xpath("//h2[contains(text(), 'Новинки')]/ancestor::div[3]")
+new_products_block = driver.find_element_by_xpath("//h2[contains(text(), 'Новинки')]")
 
 while True:
     try:
