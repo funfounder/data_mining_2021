@@ -43,6 +43,7 @@ driver.execute_script("window.scrollTo(0, 1500)")
 #наверное можно сделать проще, новинки лежат в списке у которого есть атрибут: ul data-init-param= {} "title":"Новинки", но я не нашел пока как зацепиться за элемент словаря атрибута.
 #anchor_element = driver.find_element_by_xpath('//ul[contains(., "title"]') - неудачно
 new_products_block = driver.find_element_by_xpath("//h2[contains(text(), 'Новинки')]/ancestor::div[3]")
+#new_products_block = driver.find_element_by_xpath("//h2[contains(text(), 'Новинки')]")
 
 while True:
     try:
@@ -51,11 +52,12 @@ while True:
         break
 
 goods = []
-goods_raw = new_products_block.find_elements_by_xpath("//li[contains(@class, 'gallery-list-item')]")
+#goods_raw = new_products_block.find_elements_by_xpath("//li[contains(@class, 'gallery-list-item')]")
+goods_raw = new_products_block.find_elements_by_xpath("//a[contains(@class, 'fl-product-tile-picture')]")
 
 for good in goods_raw:
     single_product = {}
-    target_element = good.find_element_by_xpath("//a[contains(@class, 'fl-product-tile-picture__link')]")
+    target_element = good.find_element_by_xpath("//a[contains(@class, 'fl-product-tile-picture')]")
     single_product.update(ast.literal_eval(target_element.get_attribute('data-product-info')))
     #    single_product.update(good.find_element_by_xpath("//a[contains(@class, 'fl-product-tile-picture__link')]").get_attribute('data-product-info'))
     single_product['link'] = f'{url}{"/".join(target_element.get_attribute("href")[0].split("/")[1:])}'
