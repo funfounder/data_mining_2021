@@ -11,26 +11,30 @@
 
 BOT_NAME = 'instaparser'
 
-SPIDER_MODULES = ['instaparser.spiders']
-NEWSPIDER_MODULE = 'instaparser.spiders'
+SPIDER_MODULES = ['lesson_8.instaparser.spiders']
+NEWSPIDER_MODULE = 'lesson_8.instaparser.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
+#USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
+USER_AGENT = 'Instagram 155.0.0.37.107'
+
+IMAGES_STORE = 'image'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
 LOG_ENABLED = True
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG' #ERROR INFO WARN CRIT?
+# LOG_FILE = 'logs.txt'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 10
+CONCURRENT_REQUESTS = 8
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0.5
+DOWNLOAD_DELAY = 1.5
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -68,7 +72,8 @@ COOKIES_ENABLED = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'instaparser.pipelines.InstaparserPipeline': 300,
+   'lesson_8.instaparser.pipelines.InstaparserPipeline': 300,
+#   'lesson_8.instaparser.pipelines.InstaparserPhotosPipeline': 200,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

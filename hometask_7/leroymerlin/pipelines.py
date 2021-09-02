@@ -10,7 +10,7 @@ import scrapy
 from pymongo import MongoClient
 from scrapy.pipelines.images import ImagesPipeline
 
-class LeroyMerlinPipeline:
+class LeroymerlinPipeline:
 
     def __init__(self):
         client = MongoClient('127.0.0.1', 27017)

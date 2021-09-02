@@ -9,8 +9,8 @@
 
 BOT_NAME = 'leroymerlin'
 
-SPIDER_MODULES = ['leroymerlin.spiders']
-NEWSPIDER_MODULE = 'leroymerlin.spiders'
+SPIDER_MODULES = ['hometask_7.leroymerlin.spiders']
+NEWSPIDER_MODULE = 'hometask_7.leroymerlin.spiders'
 
 
 LOG_ENABLED = True
@@ -72,8 +72,8 @@ COOKIES_ENABLED = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'leroymerlin.pipelines.LeroymerlinPipeline': 300,
-    'leroymerlin.pipelines.LeroyPhotosPipeline': 200,
+    'hometask_7.leroymerlin.pipelines.LeroymerlinPipeline': 300,
+    'hometask_7.leroymerlin.pipelines.LeroyPhotosPipeline': 200,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
